@@ -1,20 +1,30 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Hello HomeController!{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+        <h1>Catalogue</h1>
+        <p class="subtitle">{{ movies|length }} film{{ movies|length > 1 ? 's' : '' }} disponible{{ movies|length > 1 ? 's' : '' }}</p>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        {% if tag is defined and tag != 'general' %}
+            <p class="subtitle">Recherche : {{ tag|upper }}</p>
+        {% endif %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Alexis/Tp1/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>C:/Users/Alexis/Tp1/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
-{% endblock %}
+        <div class="grid">
+            {% for movie in movies %}
+                <article class="card">
+                    <span class="category">{{ movie.category|upper }}</span>
+                    <h2>{{ movie.name }}</h2>
+                    <p>Sortie : {{ movie.releaseYear }}</p>
+                    <p>{{ movie.synopsis|slice(0, 120) }}{% if movie.synopsis|length > 120 %}…{% endif %}</p>
+
+                    {% if movie.rating >= 4.5 %}
+                        <span class="badge">⭐ Coup de cœur</span>
+                    {% endif %}
+
+                    <a class="btn" href="{{ path('app_movie_show', {id: movie.id}) }}">Voir les détails</a>
+                </article>
+            {% else %}
+                <p class="empty">Aucun film à afficher.</p>
+            {% endfor %}
+        </div>
+        {% endblock %}
+
+
